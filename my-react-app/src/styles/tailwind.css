@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-header {
+  @apply flex flex-col items-center justify-center text-center bg-blue-500 text-white p-4 rounded-lg shadow-md;
+}
+
+.custom-logo {
+  @apply w-1/2 h-32 animate-spin;
+}
+
+.custom-code {
+  @apply bg-gray-200 p-1 rounded;
+}
+
+.custom-link {
+  @apply mt-4 text-blue-200 hover:text-white;
+}
