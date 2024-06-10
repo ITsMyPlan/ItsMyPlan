@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Header from "./components/Header";
 import CalendarPopup from "./components/CalendarPopup";
 import TaskItem from "./components/TaskItem";
@@ -6,48 +6,45 @@ import AddTask from "./components/AddTask";
 import DayPicker from "./components/DayPicker";
 
 interface Task {
-  title: string;
-  detail: string;
+	title: string;
+	detail: string;
+	time: string;
 }
 
 const App: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+	const [tasks, setTasks] = useState<Task[]>([]);
+	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const toggleCalendar = () => {
-    setIsCalendarOpen(!isCalendarOpen);
-  };
+	const toggleCalendar = () => {
+		setIsCalendarOpen(!isCalendarOpen);
+	};
 
-  const addTask = (task: Task) => {
-    setTasks([...tasks, task]);
-  };
+	const addTask = (task: Task) => {
+		// 현재 시간을 ISO 형식으로 설정
+		const currentTime = new Date().toISOString();
+		setTasks([...tasks, {...task, time: currentTime}]);
+	};
 
-  const handleSelectDate = (date: Date) => {
-    setSelectedDate(date);
-  };
+	const handleSelectDate = (date: Date) => {
+		setSelectedDate(date);
+	};
 
-  return (
-    <div className="min-h-screen bg-gray-200">
-      <Header onToggleCalendar={toggleCalendar} />
-      <CalendarPopup isOpen={isCalendarOpen} />
-      <div className="p-4">
-        <DayPicker
-          selectedDate={selectedDate}
-          onSelectDate={handleSelectDate}
-        />
-        <AddTask onAdd={addTask} />
-        <div className="mt-4">
-          {tasks.map((task, index) => (
-            <TaskItem
-              key={index}
-              task={{ title: task.title, time: task.detail }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div className='min-h-screen bg-gray-200'>
+			<Header onToggleCalendar={toggleCalendar} />
+			<CalendarPopup isOpen={isCalendarOpen} />
+			<div className='p-4'>
+				<DayPicker selectedDate={selectedDate} onSelectDate={handleSelectDate} />
+				<div className='mt-4'>
+					{tasks.map((task, index) => (
+						<TaskItem key={index} task={task} />
+					))}
+				</div>
+				<AddTask onAdd={addTask} />
+			</div>
+		</div>
+	);
 };
 
 export default App;
