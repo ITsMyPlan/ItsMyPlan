@@ -14,4 +14,6 @@ export interface AddTaskProps {
 
 export interface TaskItemProps {
 	task: Task;
+	index: number;
+	onDelete: (index: number) => void;
 }

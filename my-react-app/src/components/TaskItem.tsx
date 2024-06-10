@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {TaskItemProps} from "../types";
 
-const TaskItem: React.FC<TaskItemProps> = ({task}) => {
+const TaskItem: React.FC<TaskItemProps> = ({task, index, onDelete}) => {
 	const [showDetails, setShowDetails] = useState(false);
 
 	const toggleDetails = () => setShowDetails(!showDetails);
@@ -14,7 +14,9 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
 			</div>
 			<div className='flex justify-between items-center'>
 				<p>{new Date(task.time).toLocaleTimeString()}</p>
-				<button className='bg-red-500 text-white p-2 rounded'>삭제</button>
+				<button onClick={() => onDelete(index)} className='bg-red-500 text-white p-2 rounded'>
+					삭제
+				</button>
 			</div>
 		</div>
 	);
