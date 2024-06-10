@@ -4,12 +4,7 @@ import CalendarPopup from "./components/CalendarPopup";
 import TaskItem from "./components/TaskItem";
 import AddTask from "./components/AddTask";
 import DayPicker from "./components/DayPicker";
-
-interface Task {
-	title: string;
-	detail: string;
-	time: string;
-}
+import {Task} from "./types";
 
 const App: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);

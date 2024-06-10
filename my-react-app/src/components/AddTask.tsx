@@ -1,9 +1,5 @@
 import React, {useState} from "react";
-import {Task} from "../types";
-
-interface AddTaskProps {
-	onAdd: (task: Task) => void;
-}
+import {Task, AddTaskProps} from "../types";
 
 const AddTask: React.FC<AddTaskProps> = ({onAdd}) => {
 	const [title, setTitle] = useState("");
