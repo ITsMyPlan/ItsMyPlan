@@ -11,10 +11,20 @@ export const addTask = async (task) => {
   try {
     const response = await axios.post(API_URL, task);
     if (response.data) {
-      return response.data;
+      return response.data.task;
     }
   } catch (error) {
     console.error("Failed to add task:", error);
+    throw error;
+  }
+};
+
+export const deleteTaskFromAPI = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to delete task:", error);
     throw error;
   }
 };

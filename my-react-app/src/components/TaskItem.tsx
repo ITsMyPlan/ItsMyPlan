@@ -10,7 +10,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, index, onDelete }) => {
 
   const displayTime = new Date(task.time).toLocaleTimeString();
   const isValidDate = !isNaN(new Date(task.time).getTime());
-  console.log(displayTime, isValidDate);
+  //   console.log(displayTime, isValidDate);
+
   return (
     <div className="flex flex-col justify-between bg-white p-4 rounded shadow mb-2">
       <div onClick={toggleDetails} className="cursor-pointer">
@@ -20,7 +21,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, index, onDelete }) => {
       <div className="flex justify-between items-center">
         <p>{isValidDate ? displayTime : "Invalid time"}</p>
         <button
-          onClick={() => onDelete(index)}
+          onClick={() => onDelete(task.id)}
           className="bg-red-500 text-white p-2 rounded"
         >
           삭제

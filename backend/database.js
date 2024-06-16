@@ -7,30 +7,24 @@ const db = new sqlite3.Database(
   (err) => {
     if (err) {
       console.error(err.message);
-    } else {
-      console.log("Connected to the mydatabase.db database.");
-      initializeDB();
     }
+    console.log("Connected to the mydatabase.db database.");
   }
 );
 
-// 데이터베이스 초기화 함수
-function initializeDB() {
-  db.run(
-    `CREATE TABLE IF NOT EXISTS tasks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    detail TEXT,
-    time TEXT NOT NULL
-  )`,
-    (err) => {
-      if (err) {
-        console.error("Error creating table:", err);
-      } else {
-        console.log("Tasks table is ready or already exists.");
-      }
+// 기존 테이블 삭제
+db.run(
+  `CREATE TABLE IF NOT EXISTS tasks (
+  id TEXT PRIMARY KEY, 
+  title TEXT NOT NULL,
+  detail TEXT,
+  time TEXT NOT NULL
+)`,
+  (err) => {
+    if (err) {
+      console.error(err.message);
     }
-  );
-}
+  }
+);
 
 module.exports = db;

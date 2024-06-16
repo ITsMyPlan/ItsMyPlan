@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Task, AddTaskProps } from "../types";
 import { addTask } from "../api";
+import { v4 as uuidv4 } from "uuid";
 
 const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
   const [title, setTitle] = useState("");
@@ -9,6 +10,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newTask: Task = {
+      id: uuidv4(), // UUID 생성
       title,
       detail,
       time: new Date().toISOString(),

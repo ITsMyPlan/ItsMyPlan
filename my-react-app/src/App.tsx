@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Header from "./components/Header";
 import CalendarPopup from "./components/CalendarPopup";
 import TaskItem from "./components/TaskItem";
 import AddTask from "./components/AddTask";
 import DayPicker from "./components/DayPicker";
 import { Task } from "./types";
-import { fetchTasks, addTask } from "./api";
+import { fetchTasks, deleteTaskFromAPI } from "./api";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -34,11 +33,16 @@ const App: React.FC = () => {
     setSelectedDate(date);
   };
 
-  const deleteTask = (index: number) => {
-    const newTasks = tasks.filter((_, i) => i !== index);
-    setTasks(newTasks);
+  const deleteTask = async (id: string) => {
+    console.log(`deleteTask 클릭: ${id}`);
+    try {
+      await deleteTaskFromAPI(id);
+      const newTasks = tasks.filter((task) => task.id !== id);
+      setTasks(newTasks);
+    } catch (error) {
+      console.error("Failed to delete task:", error);
+    }
   };
-
   return (
     <div className="min-h-screen bg-gray-200">
       <Header onToggleCalendar={toggleCalendar} />

@@ -18,14 +18,33 @@ router.get("/tasks", (req, res) => {
 
 // 새로운 작업 추가
 router.post("/tasks", (req, res) => {
-  const { title, detail, time } = req.body;
-  const sql = `INSERT INTO tasks (title, detail, time) VALUES (?, ?, ?)`;
-  db.run(sql, [title, detail, time], function (err) {
+  const { id, title, detail, time } = req.body;
+  const sql = `INSERT INTO tasks (id, title, detail, time) VALUES (?, ?, ?, ?)`;
+
+  // 디버그를 위해 SQL 쿼리와 값을 콘솔에 출력
+  console.log(`SQL: ${sql}`);
+  console.log(`Values: [${id}, ${title}, ${detail}, ${time}]`);
+
+  db.run(sql, [id, title, detail, time], function (err) {
+    if (err) {
+      console.error(err.message);
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.status(201).json({ message: "Task created", id });
+  });
+});
+
+// 작업 삭제
+router.delete("/tasks/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = `DELETE FROM tasks WHERE id = ?`;
+  db.run(sql, [id], function (err) {
     if (err) {
       res.status(400).json({ error: err.message });
       return;
     }
-    res.status(201).json({ message: "Task created", id: this.lastID });
+    res.status(200).json({ message: "Task deleted", id });
   });
 });
 

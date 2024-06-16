@@ -1,19 +1,20 @@
 export interface HeaderProps {
-	onToggleCalendar: () => void;
+  onToggleCalendar: () => void;
 }
 
 export interface Task {
-	title: string;
-	detail: string;
-	time: string;
+  id: string;
+  title: string;
+  detail: string;
+  time: string;
 }
 
 export interface AddTaskProps {
-	onAdd: (task: Task) => void;
+  onAdd: (task: Task) => void;
 }
 
 export interface TaskItemProps {
-	task: Task;
-	index: number;
-	onDelete: (index: number) => void;
+  task: Task;
+  index: number;
+  onDelete: (id: string) => void;
 }
