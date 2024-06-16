@@ -6,6 +6,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, index, onDelete }) => {
   const toggleDetails = () => setShowDetails(!showDetails);
 
   // 날짜 유효성 검사
+  console.log(`task: ${JSON.stringify(task)}, task.time: ${task.time}`);
+
   const displayTime = new Date(task.time).toLocaleTimeString();
   const isValidDate = !isNaN(new Date(task.time).getTime());
   console.log(displayTime, isValidDate);

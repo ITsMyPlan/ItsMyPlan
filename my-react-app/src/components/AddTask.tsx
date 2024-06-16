@@ -15,8 +15,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onAdd }) => {
     };
     console.log("Sending to server:", newTask);
     try {
-      const addedTask = await addTask(newTask);
-      onAdd(addedTask); // 부모 컴포넌트에 추가된 태스크 전달
+      await addTask(newTask);
+      onAdd(newTask);
       setTitle("");
       setDetail("");
     } catch (error) {

@@ -26,6 +26,7 @@ const App: React.FC = () => {
   };
 
   const addTasks = (newTask: Task) => {
+    console.log(`newTask: ${JSON.stringify(newTask)}`);
     setTasks([...tasks, newTask]); // 상태 업데이트
   };
 
