@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "name": "itsmyplan",
+  "builds": [
+    {
+      "src": "my-react-app/package.json",
+      "use": "@vercel/static-build"
+    }
+  ],
+  "routes": [{ "src": "/(.*)", "dest": "my-react-app/$1" }]
+}
