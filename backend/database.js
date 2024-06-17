@@ -1,7 +1,12 @@
+const config = require("./config");
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
-require("dotenv").config();
-const DATABASE_URL = process.env.DATABASE_URL;
+const DATABASE_URL = config.DATABASE_URL;
+
+if (!DATABASE_URL) {
+  console.error("DATABASE_URL is not defined");
+  process.exit(1);
+}
 
 // 데이터베이스 파일 연결
 const db = new sqlite3.Database(
