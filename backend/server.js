@@ -1,12 +1,11 @@
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") }); // 환경변수를 로드
 const express = require("express");
 const cors = require("cors");
 const taskRoutes = require("./routes");
 
-require("dotenv").config(); // 환경변수를 로드
-
 const app = express();
-const PORT = 5001; // 포트 설정
-const DATABASE_URL = process.env.DATABASE_URL;
+const PORT = process.env.PORT || 5001; // 포트 설정
 
 app.use(
   cors({
