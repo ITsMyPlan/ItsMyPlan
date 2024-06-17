@@ -1,11 +1,16 @@
 {
-  "sqltools.connections": [
-    {
-      "previewLimit": 50,
-      "driver": "SQLite",
-      "database": "${workspaceFolder:itsmyplan}/backend/mydatabase.db",
-      "name": "itsmyplan db"
-    }
-  ],
-  "sqltools.useNodeRuntime": true
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"driver": "SQLite",
+			"database": "${workspaceFolder:itsmyplan}/backend/mydatabase.db",
+			"name": "itsmyplan db"
+		}
+	],
+	"sqltools.useNodeRuntime": true,
+	"editor.quickSuggestions": {
+		"strings": true
+	},
+	"css.validate": false,
+	"editor.inlineSuggest.enabled": true
 }
