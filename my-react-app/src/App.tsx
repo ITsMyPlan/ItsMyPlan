@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Header from "./components/Header";
 import CalendarPopup from "./components/CalendarPopup";
 import TaskItem from "./components/TaskItem";
@@ -6,11 +6,13 @@ import AddTask from "./components/AddTask";
 import DayPicker from "./components/DayPicker";
 import {Task} from "./types";
 import {fetchTasks, deleteTaskFromAPI} from "./api";
+import "react-datepicker/dist/react-datepicker.css";
 
 const App: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+	const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+	const calendarRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const loadTasks = async () => {
@@ -20,20 +22,44 @@ const App: React.FC = () => {
 		loadTasks();
 	}, []);
 
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+				setIsCalendarOpen(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
 	const toggleCalendar = () => {
 		setIsCalendarOpen(!isCalendarOpen);
 	};
 
+	useEffect(() => {
+		const loadTasks = async () => {
+			const loadedTasks = await fetchTasks();
+			setTasks(loadedTasks);
+		};
+		loadTasks();
+	}, []);
+
+	const handleSelectDate = (date: Date | null) => {
+		setSelectedDate(date);
+		setIsCalendarOpen(false);
+	};
+
 	const addTasks = (newTask: Task) => {
 		console.log(`newTask: ${JSON.stringify(newTask)}`);
-		setTasks([...tasks, newTask]); // 상태 업데이트
+		setTasks([...tasks, newTask]);
 	};
 
-	const filteredTasks = tasks.filter((task) => new Date(task.time).toDateString() === selectedDate.toDateString());
-
-	const handleSelectDate = (date: Date) => {
-		setSelectedDate(date);
-	};
+	const filteredTasks = selectedDate
+		? tasks.filter((task) => new Date(task.time).toDateString() === selectedDate.toDateString())
+		: tasks;
 
 	const deleteTask = async (id: string) => {
 		console.log(`deleteTask 클릭: ${id}`);
@@ -45,12 +71,20 @@ const App: React.FC = () => {
 			console.error("Failed to delete task:", error);
 		}
 	};
+
 	return (
 		<div className='min-h-screen bg-gray-200'>
 			<Header onToggleCalendar={toggleCalendar} />
-			<CalendarPopup isOpen={isCalendarOpen} />
+			{isCalendarOpen && (
+				<CalendarPopup
+					ref={calendarRef}
+					isOpen={isCalendarOpen}
+					onSelectDate={handleSelectDate}
+					selectedDate={selectedDate || new Date()}
+				/>
+			)}
 			<div className='p-4'>
-				<DayPicker selectedDate={selectedDate} onSelectDate={handleSelectDate} tasks={tasks} />
+				<DayPicker selectedDate={selectedDate || new Date()} onSelectDate={handleSelectDate} tasks={tasks} />
 				<div className='mt-4'>
 					{filteredTasks.map((task, index) => (
 						<TaskItem key={index} task={task} index={index} onDelete={deleteTask} />

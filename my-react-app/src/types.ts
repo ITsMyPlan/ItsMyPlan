@@ -24,3 +24,9 @@ export interface DayPickerProps {
 	onSelectDate: (date: Date) => void;
 	tasks: Task[];
 }
+
+export interface CalendarPopupProps {
+	isOpen: boolean;
+	onSelectDate: (date: Date | null) => void;
+	selectedDate: Date | null;
+}
