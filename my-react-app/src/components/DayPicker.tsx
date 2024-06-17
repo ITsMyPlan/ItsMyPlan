@@ -1,35 +1,49 @@
-// src/components/DayPicker.tsx
-import React from "react";
+import React, {useState} from "react";
+import {format, addDays, startOfWeek} from "date-fns";
+import {DayPickerProps} from "../types";
 
-interface DayPickerProps {
-  selectedDate: Date;
-  onSelectDate: (date: Date) => void;
-}
+const DayPicker: React.FC<DayPickerProps> = ({selectedDate, onSelectDate}) => {
+	const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), {weekStartsOn: 1}));
 
-const DayPicker: React.FC<DayPickerProps> = ({
-  selectedDate,
-  onSelectDate,
-}) => {
-  const days = Array.from({ length: 30 }, (_, i) => new Date(2022, 3, i + 1)); // 예를 들어 2022년 4월의 30일을 생성
+	const days = Array.from({length: 7}, (_, i) => addDays(currentWeek, i));
 
-  return (
-    <div className="flex overflow-x-auto p-4 bg-white rounded shadow-lg">
-      {days.map((day) => (
-        <button
-          key={day.toDateString()}
-          onClick={() => onSelectDate(day)}
-          className={`p-2 m-1 rounded flex-shrink-0 ${
-            day.toDateString() === selectedDate.toDateString()
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-800"
-          }`}
-          style={{ minWidth: "50px" }}
-        >
-          {day.getDate()}
-        </button>
-      ))}
-    </div>
-  );
+	const handlePrevWeek = () => {
+		const newWeek = addDays(currentWeek, -7);
+		setCurrentWeek(newWeek);
+	};
+
+	const handleNextWeek = () => {
+		const newWeek = addDays(currentWeek, 7);
+		setCurrentWeek(newWeek);
+	};
+
+	return (
+		<div className='flex items-center justify-center w-full p-4 '>
+			<button onClick={handlePrevWeek} className='px-4 py-2 mr-4 bg-gray-300 rounded-lg'>
+				&lt;
+			</button>
+			<div className='flex flex-grow w-full overflow-x-hidden'>
+				{days.map((day) => (
+					<button
+						key={day.toISOString()}
+						onClick={() => onSelectDate(day)}
+						className={`flex flex-col  items-center p-2 mx-1 rounded-lg flex-1 ${
+							day.toDateString() === selectedDate.toDateString()
+								? "bg-cyan-500 text-white"
+								: "bg-stone-50 text-gray-800"
+						}`}
+						style={{minWidth: "80px"}}>
+						<span className='text-sm'>{format(day, "MMM")}</span>
+						<strong className='text-lg'>{format(day, "d")}</strong>
+						<span className='text-xs'>{format(day, "EEE")}</span>
+					</button>
+				))}
+			</div>
+			<button onClick={handleNextWeek} className='px-4 py-2 ml-4 bg-gray-300 rounded-lg'>
+				&gt;
+			</button>
+		</div>
+	);
 };
 
 export default DayPicker;
