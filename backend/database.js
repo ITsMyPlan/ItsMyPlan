@@ -1,14 +1,14 @@
 const sqlite3 = require("sqlite3").verbose();
-
+const path = require("path");
 // 데이터베이스 파일 연결
 const db = new sqlite3.Database(
-  "./mydatabase.db",
+  path.resolve(DATABASE_URL),
   sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
   (err) => {
     if (err) {
       console.error(err.message);
     }
-    console.log("Connected to the mydatabase.db database.");
+    console.log("Connected to the database.");
   }
 );
 
