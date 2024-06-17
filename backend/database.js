@@ -1,11 +1,8 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, "../.env") }); // 환경 변수를 로드
+require("dotenv").config();
 const DATABASE_URL = process.env.DATABASE_URL;
 
-if (!DATABASE_URL) {
-  throw new Error("DATABASE_URL is not defined");
-}
 // 데이터베이스 파일 연결
 const db = new sqlite3.Database(
   path.resolve(DATABASE_URL),
