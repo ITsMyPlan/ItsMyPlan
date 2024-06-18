@@ -9,7 +9,7 @@
 			"src": "my-react-app/package.json",
 			"use": "@vercel/static-build",
 			"config": {
-				"distDir": "my-react-app/build"
+				"distDir": "build"
 			}
 		}
 	],
