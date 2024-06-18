@@ -26,3 +26,4 @@ my-react-app/node_modules/
 my-react-app/package-lock.json
 api/node_modules/
 api/package-lock.json
+api/DATABASE_URL
