@@ -1,4 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
+import {useMutation, useQueryClient, useQuery} from "@tanstack/react-query";
+
 import Header from "../components/Header";
 import CalendarPopup from "../components/CalendarPopup";
 import TaskItem from "../components/TaskItem";
@@ -13,19 +15,40 @@ const HomePage: React.FC = () => {
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 	const calendarRef = useRef<HTMLDivElement>(null);
+	const queryClient = useQueryClient();
+
+	const {
+		data: initialTasks,
+		isLoading,
+		error,
+	} = useQuery<Task[], Error>({
+		queryKey: ["tasks"],
+		queryFn: fetchTasks,
+		initialData: [], // 초기 데이터 설정
+	});
 
 	useEffect(() => {
-		const loadTasks = async () => {
-			try {
-				const loadedTasks = await fetchTasks();
-				console.log("loadedTasks:", loadedTasks);
-				setTasks(loadedTasks || []);
-			} catch (error) {
-				console.error("loadTasks error:", error);
-			}
-		};
-		loadTasks();
-	}, []);
+		if (initialTasks) {
+			setTasks(initialTasks);
+		}
+	}, [initialTasks]);
+
+	const deleteMutation = useMutation<void, Error, string>({
+		mutationFn: deleteTaskFromAPI,
+		onSuccess: () => {
+			setTasks(tasks.filter((task) => task.id !== deleteMutation.variables)); // 로컬 상태에서 삭제
+			queryClient.invalidateQueries({
+				queryKey: ["tasks"],
+			});
+		},
+		onError: (error: Error) => {
+			console.error("Failed to delete task:", error.message);
+		},
+	});
+	const deleteTask = (id: string) => {
+		console.log(id);
+		deleteMutation.mutate(id);
+	};
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -57,17 +80,6 @@ const HomePage: React.FC = () => {
 	const filteredTasks = selectedDate
 		? tasks.filter((task) => new Date(task.time).toDateString() === selectedDate.toDateString())
 		: tasks;
-
-	const deleteTask = async (id: string) => {
-		console.log(`deleteTask 클릭: ${id}`);
-		try {
-			await deleteTaskFromAPI(id);
-			const newTasks = tasks.filter((task) => task.id !== id);
-			setTasks(newTasks);
-		} catch (error) {
-			console.error("Failed to delete task:", error);
-		}
-	};
 
 	return (
 		<div className='min-h-screen bg-gray-200'>

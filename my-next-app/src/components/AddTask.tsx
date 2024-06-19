@@ -2,28 +2,39 @@ import React, {useState} from "react";
 import {Task, AddTaskProps} from "../types/types";
 import {addTask} from "../utils/api";
 import {v4 as uuidv4} from "uuid";
+import {useMutation} from "@tanstack/react-query";
 
 const AddTask: React.FC<AddTaskProps> = ({onAdd}) => {
 	const [title, setTitle] = useState("");
 	const [detail, setDetail] = useState("");
+	const [newTask, setNewTask] = useState<Task | null>(null);
+	const addTaskMutation = useMutation({
+		mutationFn: addTask,
+		onSuccess: () => {
+			if (newTask) {
+				console.log(newTask);
+				onAdd(newTask);
+			}
+		},
+		onError: (error) => {
+			console.error("Error adding task:", error.message);
+		},
+	});
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const newTask: Task = {
+		const task = {
 			id: uuidv4(),
 			title,
 			detail,
 			time: new Date().toISOString(),
 		};
-		console.log("Sending to server:", newTask);
-		try {
-			await addTask(newTask);
-			onAdd(newTask);
-			setTitle("");
-			setDetail("");
-		} catch (error) {
-			console.error("Error adding task:", error);
-		}
+
+		setNewTask(task);
+		addTaskMutation.mutate(task);
+
+		setTitle("");
+		setDetail("");
 	};
 
 	return (
